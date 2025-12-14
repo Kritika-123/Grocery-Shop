@@ -1,0 +1,43 @@
+========================================
+EMAIL CONFIGURATION INSTRUCTIONS
+========================================
+
+To enable email sending from kritika2446@gmail.com:
+
+STEP 1: Enable 2-Factor Authentication
+---------------------------------------
+1. Go to: https://myaccount.google.com/security
+2. Enable 2-Step Verification if not already enabled
+
+STEP 2: Generate App Password
+------------------------------
+1. Go to: https://myaccount.google.com/apppasswords
+2. Select "Mail" as the app
+3. Select "Windows Computer" or "Other" as the device
+4. Click "Generate"
+5. Copy the 16-character password (it will look like: xxxx xxxx xxxx xxxx)
+
+STEP 3: Configure the Application
+----------------------------------
+Option A: Create .env file (Recommended)
+1. Create a file named ".env" in the Grocery-Shop folder
+2. Add this line (replace with your actual app password):
+   EMAIL_PASSWORD=your16characterpassword
+
+Option B: Set Environment Variable
+1. In PowerShell, run:
+   $env:EMAIL_PASSWORD="your16characterpassword"
+2. Then start the server
+
+STEP 4: Restart the Server
+---------------------------
+After setting the password, restart the Django server.
+Emails will now be sent to the customer's email address when they place an order.
+
+CURRENT CONFIGURATION:
+- Sender Email: kritika2446@gmail.com
+- Admin Email: kritika2446@gmail.com
+- Customer emails will be sent to the email address provided during checkout
+
+NOTE: If EMAIL_PASSWORD is not set, emails will be printed to the console instead of being sent.
+

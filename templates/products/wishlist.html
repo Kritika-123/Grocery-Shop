@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Wishlist - Vaid Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+    .wishlist-header {
+        background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 2rem 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .wishlist-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        transition: all 0.3s ease;
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .wishlist-card:hover {
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+    }
+
+    .wishlist-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 12px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    }
+
+    .wishlist-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .wishlist-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .wishlist-description {
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+
+    .wishlist-price {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #8b5cf6;
+        margin-bottom: 1rem;
+    }
+
+    .wishlist-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-add-cart {
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-add-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        color: white;
+    }
+
+    .btn-remove {
+        background: #ef4444;
+        border: none;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-remove:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    .empty-wishlist {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+
+    .empty-wishlist i {
+        font-size: 5rem;
+        color: #d1d5db;
+        margin-bottom: 1.5rem;
+    }
+
+    .wishlist-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .badge-available {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-out-of-stock {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    @media (max-width: 768px) {
+        .wishlist-card {
+            flex-direction: column;
+        }
+
+        .wishlist-image {
+            width: 100%;
+            height: 200px;
+        }
+
+        .wishlist-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Wishlist Header -->
+<div class="wishlist-header">
+    <div class="container">
+        <h1 class="mb-2">
+            <i class="bi bi-heart-fill me-3"></i>My Wishlist
+        </h1>
+        <p class="mb-0 opacity-75">{{ wishlist_items.count }} item{{ wishlist_items.count|pluralize }} in your wishlist</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if wishlist_items %}
+        <div class="row">
+            <div class="col-12">
+                {% for item in wishlist_items %}
+                <div class="wishlist-card">
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="wishlist-image">
+                    <div class="wishlist-content">
+                        <div>
+                            {% if item.product.stock > 0 %}
+                                <span class="wishlist-badge badge-available">
+                                    <i class="bi bi-check-circle me-1"></i>In Stock
+                                </span>
+                            {% else %}
+                                <span class="wishlist-badge badge-out-of-stock">
+                                    <i class="bi bi-x-circle me-1"></i>Out of Stock
+                                </span>
+                            {% endif %}
+                            <h3 class="wishlist-title">{{ item.product.name }}</h3>
+                            <p class="wishlist-description">{{ item.product.description|truncatewords:20 }}</p>
+                            <div class="wishlist-price">₹{{ item.product.price|floatformat:2 }}</div>
+                        </div>
+                        <div class="wishlist-actions">
+                            {% if item.product.stock > 0 %}
+                            <form method="post" action="{% url 'cart:cart_add' item.product.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-add-cart">
+                                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                                </button>
+                            </form>
+                            {% else %}
+                            <button class="btn btn-add-cart" disabled>
+                                <i class="bi bi-cart-x me-2"></i>Out of Stock
+                            </button>
+                            {% endif %}
+                            <a href="{% url 'products:product_detail' item.product.slug %}" class="btn btn-outline-primary">
+                                <i class="bi bi-eye me-2"></i>View Details
+                            </a>
+                            <form method="post" action="{% url 'products:remove_from_wishlist' item.product.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-remove">
+                                    <i class="bi bi-trash me-2"></i>Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-plus-circle me-2"></i>Add More Items
+            </a>
+        </div>
+    {% else %}
+        <div class="empty-wishlist">
+            <i class="bi bi-heart"></i>
+            <h3>Your Wishlist is Empty</h3>
+            <p class="text-muted mb-4">Start adding products you love to your wishlist!</p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-add-cart btn-lg">
+                <i class="bi bi-bag me-2"></i>Start Shopping
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

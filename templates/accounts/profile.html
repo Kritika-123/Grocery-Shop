@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile - Vaid Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        color: white;
+        padding: 3rem 0;
+        margin: -1.5rem -1.5rem 2rem -1.5rem;
+        border-radius: 16px 16px 0 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: 700;
+        color: white;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        border: 5px solid white;
+    }
+
+    .profile-stats {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: -3rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #8b5cf6;
+        display: block;
+    }
+
+    .stat-label {
+        color: #6b7280;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .order-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border-left: 4px solid #8b5cf6;
+    }
+
+    .order-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: translateX(5px);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .order-id {
+        font-weight: 700;
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6b7280;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+
+    .action-btn {
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .section-title i {
+        margin-right: 0.5rem;
+        color: #8b5cf6;
+    }
+
+    .edit-mode {
+        background: #faf5ff;
+        border: 2px dashed #8b5cf6;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+    <!-- Profile Header -->
+    <div class="info-card">
+        <div class="profile-header">
+            <div class="container">
+                <div class="text-center position-relative">
+                    <div class="profile-avatar">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <h2 class="mb-2">{{ user.get_full_name|default:user.username }}</h2>
+                    <p class="mb-0 opacity-75">
+                        <i class="bi bi-envelope me-2"></i>{{ user.email }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Stats -->
+        <div class="container">
+            <div class="profile-stats">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ recent_orders.count }}</span>
+                            <span class="stat-label">Total Orders</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-value">₹{{ total_spent|floatformat:2 }}</span>
+                            <span class="stat-label">Total Spent</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-item">
+                            <span class="stat-value">{{ user.date_joined|timesince }}</span>
+                            <span class="stat-label">Member Since</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-lg-4 mb-4">
+            <div class="info-card">
+                <h3 class="section-title">
+                    <i class="bi bi-person-circle"></i>
+                    Profile Information
+                </h3>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Username</div>
+                        <div class="info-value">{{ user.username }}</div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">
+                            {% if user.first_name or user.last_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value">
+                            {% if user.email %}
+                                {{ user.email }}
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="bi bi-calendar"></i>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-label">Member Since</div>
+                        <div class="info-value">{{ user.date_joined|date:"F d, Y" }}</div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary w-100 action-btn">
+                        <i class="bi bi-pencil me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="info-card">
+                <h3 class="section-title">
+                    <i class="bi bi-lightning"></i>
+                    Quick Actions
+                </h3>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'products:product_list' %}" class="btn btn-outline-primary action-btn">
+                        <i class="bi bi-bag me-2"></i>Continue Shopping
+                    </a>
+                    <a href="{% url 'cart:cart_detail' %}" class="btn btn-outline-success action-btn">
+                        <i class="bi bi-cart me-2"></i>View Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="col-lg-8 mb-4">
+            <div class="info-card">
+                <h3 class="section-title">
+                    <i class="bi bi-clock-history"></i>
+                    Recent Orders
+                </h3>
+
+                {% if recent_orders %}
+                    {% for order in recent_orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">
+                                    <i class="bi bi-receipt me-2"></i>Order #{{ order.id }}
+                                </div>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>{{ order.created_at|date:"F d, Y" }}
+                                </small>
+                            </div>
+                            <div>
+                                {% if order.status == 'delivered' %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>Delivered
+                                    </span>
+                                {% elif order.status == 'shipped' %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-truck me-1"></i>Shipped
+                                    </span>
+                                {% elif order.status == 'processing' %}
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-hourglass-split me-1"></i>Processing
+                                    </span>
+                                {% elif order.status == 'cancelled' %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle me-1"></i>Cancelled
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-clock me-1"></i>Pending
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted">Total Amount:</span>
+                                <strong class="ms-2" style="color: #8b5cf6; font-size: 1.2rem;">
+                                    ₹{{ order.total_amount|floatformat:2 }}
+                                </strong>
+                            </div>
+                            <a href="{% url 'accounts:my_orders' %}" class="btn btn-sm btn-outline-primary">
+                                View Details <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-bag-x"></i>
+                        <h4>No Orders Yet</h4>
+                        <p class="mb-4">Start shopping to see your orders here!</p>
+                        <a href="{% url 'products:product_list' %}" class="btn btn-primary action-btn">
+                            <i class="bi bi-bag me-2"></i>Start Shopping
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Profile - Vaid Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+    .edit-container {
+        min-height: 80vh;
+        padding: 2rem 0;
+    }
+
+    .edit-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .edit-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        color: white;
+        padding: 2.5rem;
+        text-align: center;
+    }
+
+    .edit-header i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .edit-header h2 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .edit-body {
+        padding: 2.5rem;
+        background: white;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .form-label i {
+        margin-right: 0.5rem;
+        color: #8b5cf6;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-cancel {
+        background: #6b7280;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #4b5563;
+        transform: translateY(-2px);
+    }
+
+    .info-box {
+        background: #faf5ff;
+        border-left: 4px solid #8b5cf6;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-box i {
+        color: #8b5cf6;
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-container">
+    <div class="container">
+        <div class="edit-card">
+            <div class="edit-header">
+                <i class="bi bi-pencil-square"></i>
+                <h2>Edit Your Profile</h2>
+                <p class="mb-0 opacity-75">Update your personal information</p>
+            </div>
+            <div class="edit-body">
+                <div class="info-box">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Note:</strong> Your username cannot be changed. Update your name and email below.
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="id_first_name">
+                            <i class="bi bi-person"></i>
+                            First Name
+                        </label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger mt-1">{{ form.first_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_last_name">
+                            <i class="bi bi-person"></i>
+                            Last Name
+                        </label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger mt-1">{{ form.last_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="id_email">
+                            <i class="bi bi-envelope"></i>
+                            Email Address
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger mt-1">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-save flex-fill">
+                            <i class="bi bi-check-circle me-2"></i>Save Changes
+                        </button>
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-cancel">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

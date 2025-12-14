@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - Vaid Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #8b5cf6;
+        --secondary-color: #ec4899;
+        --accent-color: #f59e0b;
+        --text-dark: #212121;
+        --text-light: #fff;
+        --card-bg: #ffffff;
+        --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--text-light);
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 1.5rem 1.5rem;
+        position: relative;
+        box-shadow: 0 6px 24px var(--shadow);
+        overflow: hidden;
+    }
+
+    .hero-title {
+        font-size: 3.2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+    }
+
+    .hero-buttons .btn {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-light {
+        background-color: var(--accent-color);
+        color: var(--text-dark);
+        border: none;
+    }
+
+    .btn-light:hover {
+        background-color: #fdd835;
+        transform: scale(1.05);
+    }
+
+    .btn-outline-light:hover {
+        background-color: var(--text-light);
+        color: var(--primary-color);
+    }
+
+    .hero-image {
+    max-width: 80%;
+    max-height: 350px;
+    height: auto;
+    animation: float 4s ease-in-out infinite;
+}
+
+    .hero-shape {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .hero-shape-1 {
+        top: -80px;
+        right: -80px;
+        animation: pulse 8s ease-in-out infinite;
+    }
+
+    .hero-shape-2 {
+        bottom: -100px;
+        left: -100px;
+        animation: pulse 8s ease-in-out infinite 1s;
+    }
+
+    .section-header {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .section-header:after {
+        content: '';
+        width: 80px;
+        height: 4px;
+        background: var(--secondary-color);
+        position: absolute;
+        left: 50%;
+        bottom: -10px;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    .product-card {
+        height: 100%;
+        width: 100%;
+        max-width: 300px;
+        border: none;
+        border-radius: 1rem;
+        overflow: hidden;
+        background-color: var(--card-bg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 16px var(--shadow);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .product-image-container {
+        position: relative;
+        width: 100%;
+        padding-top: 75%; /* 4:3 Aspect Ratio */
+        overflow: hidden;
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    }
+
+    .product-image-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image-container img {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    .card-text {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: #666;
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        transition: all 0.3s ease;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+
+    /* Animations */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.4;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.2;
+        }
+    }
+
+    /* Categories Grid Layout */
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+        justify-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .categories-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            max-width: 100%;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 4rem 0;
+        background: white;
+        margin: 3rem 0;
+        border-radius: 1.5rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .feature-box {
+        text-align: center;
+        padding: 2rem;
+        transition: var(--transition);
+    }
+
+    .feature-box:hover {
+        transform: translateY(-10px);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .feature-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: var(--text-dark);
+    }
+
+    .feature-text {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--shadow-md);
+        margin: 1rem;
+        transition: var(--transition);
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .testimonial-text {
+        font-style: italic;
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+    }
+
+    .author-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        margin-right: 1rem;
+    }
+
+    .author-name {
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+
+    .author-role {
+        font-size: 0.85rem;
+        color: var(--text-light);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title">Fresh Groceries Delivered to Your Door</h1>
+                <p class="hero-subtitle">Shop from our wide range of fresh fruits, vegetables, dairy products, and more at the best prices in town.</p>
+                <div class="hero-buttons">
+                    <a href="{% url 'products:product_list' %}" class="btn btn-light btn-lg me-3">
+                        <i class="bi bi-bag-check me-2"></i>Shop Now
+                    </a>
+                    <a href="#categories" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-grid me-2"></i>Browse Categories
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="https://imgs.search.brave.com/QiBTPkIwcxV3zL3GJEnYoS62hPQVbTT0JG7cl5jg8t8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cG5nYWxsLmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvNC9Hcm9j/ZXJ5LVBORy5wbmc" alt="Fresh Groceries" class="hero-image float-animation">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<div class="container">
+    <div class="features-section">
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h4 class="feature-title">Free Delivery</h4>
+                    <p class="feature-text">On orders above ₹500</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4 class="feature-title">100% Fresh</h4>
+                    <p class="feature-text">Quality guaranteed products</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <h4 class="feature-title">Quick Delivery</h4>
+                    <p class="feature-text">Same day delivery available</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <h4 class="feature-title">24/7 Support</h4>
+                    <p class="feature-text">Always here to help you</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="section-header" id="categories">Categories</h2>
+            <div class="categories-grid">
+                {% for category in categories %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        {% if category.image_url %}
+                        <img src="{{ category.image_url }}" class="card-img-top" alt="{{ category.name }}">
+                        {% else %}
+                        <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="No image available">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description|truncatewords:20 }}</p>
+                        <a href="{{ category.get_absolute_url }}" class="btn btn-primary">View Products</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="section-header">Featured Products</h2>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                {% for product in featured_products %}
+                <div class="col">
+                    <div class="card h-100 product-card">
+                        <div class="product-image-container">
+                            {% if product.image_url %}
+                            <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}">
+                            {% else %}
+                            <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="No image available">
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+                            <p class="card-text price">₹{{ product.price|floatformat:2 }}</p>
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-primary mt-auto">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

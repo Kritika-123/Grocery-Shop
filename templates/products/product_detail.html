@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Vaid Shop{% endblock %}
+
+{% block content %}
+<style>
+    .product-image {
+        max-height: 400px;
+        object-fit: contain;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+    .product-title {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    .product-price {
+        font-size: 1.5rem;
+        color: #28a745;
+        font-weight: 600;
+        margin: 1rem 0;
+    }
+    .product-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #666;
+    }
+    .product-meta {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+    }
+    .related-product-card {
+        height: 100%;
+        transition: transform 0.2s;
+    }
+    .related-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .product-image-container {
+        height: 200px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+    .product-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        {% if product.image_url %}
+        <img src="{{ product.image_url }}" class="img-fluid product-image" alt="{{ product.name }}">
+        {% else %}
+        <img src="{% static 'images/no-image.jpg' %}" class="img-fluid product-image" alt="No image available">
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h1 class="product-title">{{ product.name }}</h1>
+        <p class="product-description">{{ product.description }}</p>
+        <div class="product-meta">
+            <h3 class="product-price">₹{{ product.price|floatformat:2 }}</h3>
+            <span class="badge bg-{% if product.available %}success{% else %}danger{% endif %}">
+                {% if product.available %}In Stock{% else %}Out of Stock{% endif %}
+            </span>
+        </div>
+        <div class="product-meta">
+            <p><strong>Category:</strong> <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></p>
+            <p><strong>Stock:</strong> {{ product.stock }} units</p>
+        </div>
+        {% if product.available and user.is_authenticated %}
+        <form method="post" action="{% url 'cart:cart_add' product.id %}" class="mb-3">
+            {% csrf_token %}
+            <div class="input-group mb-3" style="max-width: 200px;">
+                <label class="input-group-text" for="quantity">Quantity</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2>Related Products</h2>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% for related_product in product.category.products.all|slice:":4" %}
+            {% if related_product.id != product.id %}
+            <div class="col">
+                <div class="card h-100 related-product-card">
+                    <div class="product-image-container">
+                        {% if related_product.image_url %}
+                        <img src="{{ related_product.image_url }}" class="card-img-top" alt="{{ related_product.name }}">
+                        {% else %}
+                        <img src="{% static 'images/no-image.jpg' %}" class="card-img-top" alt="No image available">
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ related_product.name }}</h5>
+                        <p class="card-text">{{ related_product.description|truncatewords:10 }}</p>
+                        <p class="card-text price">₹{{ related_product.price|floatformat:2 }}</p>
+                        <a href="{{ related_product.get_absolute_url }}" class="btn btn-primary mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

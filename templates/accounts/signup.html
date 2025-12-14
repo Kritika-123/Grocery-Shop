@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Sign Up - Vaid Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .auth-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .auth-header {
+        background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        color: white;
+        padding: 2.5rem;
+        text-align: center;
+    }
+
+    .auth-header i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .auth-header h2 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .auth-body {
+        padding: 2.5rem;
+        background: white;
+    }
+
+    .auth-body .btn-primary {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        margin-top: 1rem;
+        background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+    }
+
+    .auth-divider {
+        text-align: center;
+        margin: 1.5rem 0;
+        position: relative;
+    }
+
+    .auth-divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: #e5e7eb;
+    }
+
+    .auth-divider span {
+        background: white;
+        padding: 0 1rem;
+        position: relative;
+        color: #6b7280;
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .auth-link a {
+        color: #8b5cf6;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .auth-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <i class="bi bi-person-plus-fill"></i>
+                        <h2>Create Account</h2>
+                        <p class="mb-0 opacity-75">Join us and start shopping!</p>
+                    </div>
+                    <div class="auth-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-2"></i>Sign Up
+                            </button>
+                        </form>
+                        <div class="auth-divider">
+                            <span>OR</span>
+                        </div>
+                        <div class="auth-link">
+                            <p class="mb-0">Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
